@@ -1,0 +1,26 @@
+{
+  "name": "chatter-api",
+  "version": "1.0.0",
+  "description": "Socket server for Chatter app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "8.11.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/frozenfroggie/chatter-api.git"
+  },
+  "author": "frozenfroggie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frozenfroggie/chatter-api/issues"
+  },
+  "homepage": "https://github.com/frozenfroggie/chatter-api#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  }
+}
