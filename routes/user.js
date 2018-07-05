@@ -74,10 +74,19 @@ router.get('/verification/:token', (req, res) => {
 
 router.post('/login', (req,res) => {
   const { username, password } = req.body;
-  res.send({
-    accessToken: 'abc123',
-    expiresIn: 3600,
-    refreshToken: 'abc123'
+  User.findByCredentials(username, password).then(user => {
+    console.log(user);
+    res.send(user);
+    // user.generateTokens().then({ accessToken, refreshToken } => {
+    //   res.send({
+    //     accessToken,
+    //     expiresIn: 3600,
+    //     refreshToken
+    //   });
+    // });
+  }).catch(err => {
+    console.log(err);
+    res.send(err);
   });
 });
 
