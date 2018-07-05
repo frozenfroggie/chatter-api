@@ -45,7 +45,7 @@ UserSchema.statics.findByCredentials = (username, password) => {
     }
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, user.password).then(res => res ? resolve(user) : reject({ type: 'invalid-password' }));
-    }
+    });
   });
 }
 
