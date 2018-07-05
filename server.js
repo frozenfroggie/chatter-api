@@ -14,6 +14,10 @@ app.use(bodyParser.json());
 
 mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
 
+app.get('/', (req,res) => {
+  res.json({message: 'connected'});
+});
+
 app.use('/user', userRoutes);
 
 io.on('connection', socket => {
@@ -35,7 +39,7 @@ io.on('connection', socket => {
 
 });
 
-const port = process.env.PORT || 3004;
+const port = process.env.PORT || 5000;
 http.listen(port, () => {
   console.log(`Listening on ${port}`);
 });
