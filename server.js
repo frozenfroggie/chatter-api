@@ -16,7 +16,7 @@ const chatRoutes = require('./routes/chat');
 
 app.use(helmet());
 app.use(morgan('tiny'));
-var whitelist = ['http://localhost:8080'];
+var whitelist = ['http://localhost:8080', 'https://chatter-server.herokuapp.com'];
 var corsOptions = {
   origin: (origin, cb) => {
     whitelist.indexOf(origin) !== -1 ? cb(null, true) : cb(new Error('Not allowed by CORS'));
