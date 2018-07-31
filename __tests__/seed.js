@@ -16,21 +16,25 @@ const users = [{
   username: 'firstuser',
   email: 'andrew@example.com',
   password: userOnePassHashed,
+  friends: [],
   tokens: {
-    authToken: `${jwt.sign({_id: userOneId, access: 'auth'}, process.env.JWT_AUTHENTICATION_SECRET)}`,
-    refreshToken: `${jwt.sign({_id: userOneId, access: 'refresh'}, process.env.JWT_REFRESH_SECRET)}`
+    accessToken: jwt.sign({_id: userOneId}, process.env.JWT_AUTHENTICATION_SECRET),
+    refreshToken: jwt.sign({_id: userOneId}, process.env.JWT_REFRESH_SECRET),
+    verificationToken: jwt.sign({id: userOneId}, process.env.JWT_VERIFICATION_SECRET, {expiresIn: 86400})
   }
 }, {
   _id: userTwoId,
-  isVerified: true,
+  isVerified: false,
   username: 'seconduser',
   email: 'jen@example.com',
   password: userTwoPassHashed,
+  friends: [],
   tokens: {
-    authToken: `${jwt.sign({_id: userTwoId, access: 'auth'}, process.env.JWT_AUTHENTICATION_SECRET)}`,
-    refreshToken:`${jwt.sign({_id: userTwoId, access: 'refresh'}, process.env.JWT_REFRESH_SECRET, {
+    accessToken: jwt.sign({_id: userTwoId}, process.env.JWT_AUTHENTICATION_SECRET),
+    refreshToken: jwt.sign({_id: userTwoId}, process.env.JWT_REFRESH_SECRET, {
       expiresIn: 0 //the token expired at the same moment it was created
-    })}`
+    }),
+    verificationToken: jwt.sign({id: userTwoId}, process.env.JWT_VERIFICATION_SECRET, {expiresIn: 86400})
   }
 }];
 
