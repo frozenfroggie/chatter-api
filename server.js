@@ -20,20 +20,16 @@ app.use(helmet());
 app.use(morgan('tiny'));
 const allowedHosts = ['chatter-server.herokuapp.com'];
 const whitelist = ['http://chatter.cf.s3-website-us-east-1.amazonaws.com', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
-const corsOptions = {
-  origin: (req, origin, cb) => {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else if (origin === undefined && allowedHosts.indexOf(req.header.host)) {
-      callback(null, true);
-    } else {
-      console.log('host', req.header.host)
-      callback(new Error(`${origin} not allowed by CORS`));
-    }
-  },
-  exposedHeaders: ['Authorization']
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (whitelist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  }else{
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
 }
-app.use(cors(corsOptions));
+app.use(cors(corsOptionsDelegate));
 app.use(bodyParser.json());
 
 mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
