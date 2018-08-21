@@ -6,19 +6,22 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const helmet = require('helmet');
-const Message = require('./models/message');
-const Conversation = require('./models/conversation');
+const compression = require('compression');
 
 require('./config/config');
+const Message = require('./models/message');
+const Conversation = require('./models/conversation');
 const generateMessage = require('./utils/generateMessage');
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
 
+app.use(compression());
 app.use(helmet());
 app.use(morgan('tiny'));
-var whitelist = ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:8082', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
+var whitelist = ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:8082', 'http://chatter.cf.s3-website-us-east-1.amazonaws.com', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
 var corsOptions = {
   origin: (origin, cb) => {
+    console.log('origin', origin)
     whitelist.indexOf(origin) !== -1 ? cb(null, true) : cb(new Error('Not allowed by CORS'));
   },
   exposedHeaders: ['Authorization']
