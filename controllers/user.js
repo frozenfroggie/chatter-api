@@ -21,7 +21,7 @@ exports.signup = (req,res) => {
             `<table style="width: 100%;">
               <tr>
                 <td style="text-align: center;">
-                  <img width="50px" src="https://res.cloudinary.com/dce1p308g/image/upload/v1534873294/logo3.png" alt="apple_icon_57x57" border="0">
+                  <img style="width:50px;border-radius:4px;" src="https://res.cloudinary.com/dce1p308g/image/upload/v1534873294/logo3.png" alt="apple_icon_57x57" border="0">
                 </td>
               </tr>
               <tr>
@@ -34,7 +34,7 @@ exports.signup = (req,res) => {
               <tr>
                 <td style="text-align: center;">
                   <a style="box-sizing: border-box; border-color: #348eda; font-weight: 400; text-decoration: none;
-                    display: inline-block; margin: 0; color: #ffffff; background-color: rgb(107, 44, 163);
+                    display: inline-block; margin: 0; color: #ffffff; background-color: #323F57;
                     border-radius: 2px; font-size: 14px; padding: 12px 45px;"
                     href="${url}">Confirm Email Address</a>
                 </td>
