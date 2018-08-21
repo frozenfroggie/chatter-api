@@ -40,6 +40,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isOnline: {
+    type: Boolean,
+    default: false
+  },
   friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
   conversations: [{type: Schema.Types.ObjectId, ref: 'Conversation'}]
 });

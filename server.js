@@ -16,7 +16,7 @@ const chatRoutes = require('./routes/chat');
 
 app.use(helmet());
 app.use(morgan('tiny'));
-var whitelist = ['http://localhost:8080', 'https://chatter-server.herokuapp.com'];
+var whitelist = ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:8082', 'https://chatter-server.herokuapp.com'];
 var corsOptions = {
   origin: (origin, cb) => {
     whitelist.indexOf(origin) !== -1 ? cb(null, true) : cb(new Error('Not allowed by CORS'));
@@ -38,25 +38,29 @@ app.use('/chat', chatRoutes);
 io.on('connection', socket => {
   console.log('new user connected');
   // On conversation entry, join broadcast channel
-  socket.on('enterConversation', (conversationId) => {
-    socket.join(conversationId.data);
-    console.log(conversationId);
+  socket.on('enterConversation', (data) => {
+    console.log('enter!!!')
+    socket.join(data.data.conversationId);
+    io.of('/').in(data.data.conversationId).clients((error, clients) => {
+      if (error) throw error;
+      io.to(data.data.conversationId).emit('enterConversation', {[data.data.conversationId]: clients.length});
+    });
+    console.log('User enter conversation', data.data.conversationId);
   });
 
-  // socket.emit('newMessage', generateMessage('Admin', 'Welcome to chat app'));
+  socket.on('typingNotification', (data) => {
+    console.log(data.data)
+    socket.broadcast.to(data.data).emit('typingNotification');
+  });
 
   socket.on('sendMessage', ({ author, recipent, conversationId, messageText }, callback) => {
-    // io.sockets.in(conversation).emit('refresh messages', conversation);
-    // const message = new Message({
-    //   author:
-    // });
     const message = new Message({
       author: author._id,
       recipent: recipent._id,
       conversationId,
       messageText
     });
-    console.log('message', message)
+    console.log('SEND MESSAGE', message)
     message.save().then(() => {
       const message = {
         author,
@@ -72,20 +76,11 @@ io.on('connection', socket => {
     });
   });
 
-  socket.on('leaveConversation', (conversation) => {
-    socket.leave(conversation);
-    console.log('left ' + conversation);
-  })
-
-  socket.on('disconnect', () => {
-   console.log('User was disconnected');
+  socket.on('leaveConversation', (conversationId) => {
+   console.log('User was disconnected', conversationId.data);
+   socket.broadcast.to(conversationId.data).emit('leaveConversation', conversationId.data);
+   socket.leave(conversationId.data);
  });
-
-  // socket.on('createMessage', (message, callback) => {
-  //   // console.log('Create message', message)
-  //   io.emit('newMessage', generateMessage(message.from, message.text));
-  //   callback();
-  // })
 
 });
 
