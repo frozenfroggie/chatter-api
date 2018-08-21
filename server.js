@@ -21,7 +21,7 @@ app.use(morgan('tiny'));
 const allowedHosts = ['chatter-server.herokuapp.com'];
 const whitelist = ['http://chatter.cf.s3-website-us-east-1.amazonaws.com', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
 const corsOptions = {
-  origin: (origin, cb) => {
+  origin: (req, origin, cb) => {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else if (origin === undefined && allowedHosts.indexOf(req.header.host)) {
