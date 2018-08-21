@@ -63,7 +63,7 @@ exports.verification = (req,res) => {
   try {
     const { id } = jwt.verify(req.params.token, process.env.JWT_VERIFICATION_SECRET);
     User.findByIdAndUpdate(id, {$set: {'isVerified': true }}, {new: true}).then(user => {
-      res.redirect(process.env.HOME_URL);
+      res.redirect('https://chatter.cf');
     }).catch(err => {
       throw error;
     });
