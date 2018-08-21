@@ -21,8 +21,8 @@ app.use(morgan('tiny'));
 var whitelist = ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:8082', 'http://chatter.cf.s3-website-us-east-1.amazonaws.com', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
 var corsOptions = {
   origin: (origin, cb) => {
-    console.log('origin', origin)
-    whitelist.indexOf(origin) !== -1 ? cb(null, true) : cb(new Error('Not allowed by CORS'));
+    console.log('origin', whitelist.indexOf(origin))
+    whitelist.indexOf(origin) ? cb(null, true) : cb(new Error('Not allowed by CORS'));
   },
   exposedHeaders: ['Authorization']
 }
