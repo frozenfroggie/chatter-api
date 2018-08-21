@@ -50,6 +50,7 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.statics.findByCredentials = function(username, password) {
   const User = this;
+  console.log('HEROKU', User)
   return User.findOne({username}).populate('friends', '_id username email conversations').populate({path: 'conversations', populate: {path: 'users'}}).then(user => {
     if(!user) {
       return Promise.reject({ type: 'no-user-found' });
