@@ -44,7 +44,7 @@ exports.signup = (req,res) => {
           sgMail.setApiKey(process.env.SENDGRID_API_KEY);
           const msg = {
             to: user.email,
-            from: 'no-reply@chatter.io',
+            from: 'no-reply@chatter.cf',
             subject: 'Welcome to Chatter! Confirm Your Email',
             html
           };
@@ -61,8 +61,11 @@ exports.signup = (req,res) => {
 
 exports.verification = (req,res) => {
   try {
+    console.log('verification token', req.params.tokens)
     const { id } = jwt.verify(req.params.token, process.env.JWT_VERIFICATION_SECRET);
+    console.log('id', id)
     User.findByIdAndUpdate(id, {$set: {'isVerified': true }}, {new: true}).then(user => {
+      console.log('user', user)
       res.redirect('https://chatter.cf');
     }).catch(err => {
       throw error;
