@@ -18,13 +18,12 @@ const chatRoutes = require('./routes/chat');
 app.use(compression());
 app.use(helmet());
 app.use(morgan('tiny'));
-const allowedHosts = ['chatter-server.herokuapp.com'];
-const whitelist = ['http://chatter.cf.s3-website-us-east-1.amazonaws.com', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
-const corsOptionsDelegate = function (req, callback) {
+const whitelist = ['https://chatter.cf'];
+const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
   if (whitelist.indexOf(req.header('Origin')) !== -1) {
     corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  }else{
+  } else {
     corsOptions = { origin: false } // disable CORS for this request
   }
   callback(null, corsOptions) // callback expects two parameters: error and options
