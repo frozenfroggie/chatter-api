@@ -18,11 +18,18 @@ const chatRoutes = require('./routes/chat');
 app.use(compression());
 app.use(helmet());
 app.use(morgan('tiny'));
-var whitelist = ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:8082', 'http://chatter.cf.s3-website-us-east-1.amazonaws.com', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
-var corsOptions = {
+const allowedHosts = ['chatter-server.herokuapp.com'];
+const whitelist = ['http://chatter.cf.s3-website-us-east-1.amazonaws.com', 'https://chatter.cf', 'https://chatter-server.herokuapp.com/user/verification'];
+const corsOptions = {
   origin: (origin, cb) => {
-    console.log('origin', whitelist.indexOf(origin))
-    whitelist.indexOf(origin) ? cb(null, true) : cb(new Error('Not allowed by CORS'));
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else if (origin === undefined && allowedHosts.indexOf(req.header.host)) {
+      callback(null, true);
+    } else {
+      console.log('host', req.header.host)
+      callback(new Error(`${origin} not allowed by CORS`));
+    }
   },
   exposedHeaders: ['Authorization']
 }
