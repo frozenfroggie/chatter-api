@@ -21,7 +21,7 @@ exports.signup = (req,res) => {
             `<table style="width: 100%;">
               <tr>
                 <td style="text-align: center;">
-                  <img width="50px" src="https://image.ibb.co/fCdOVS/apple_icon_57x57.png" alt="apple_icon_57x57" border="0">
+                  <img width="50px" src="https://res.cloudinary.com/dce1p308g/image/upload/v1534873294/logo3.png" alt="apple_icon_57x57" border="0">
                 </td>
               </tr>
               <tr>
