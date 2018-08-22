@@ -18,7 +18,7 @@ const chatRoutes = require('./routes/chat');
 app.use(compression());
 app.use(helmet());
 app.use(morgan('tiny'));
-const whitelist = ['https://chatter.cf'];
+const whitelist = ['https://chatter.cf', 'http://localhost:8080'];
 const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
   if (whitelist.indexOf(req.header('Origin')) !== -1) {
