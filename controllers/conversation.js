@@ -5,7 +5,7 @@ const createConversationSnippet = require('../utils/createConversationSnippet');
 
 exports.getConversationsSnippets = async (req, res) => {
   const conversationsSnippets = [];
-  const conversations = await Conversation.find({participants: req.user._id}).populate('username');
+  const conversations = await Conversation.find({participants: req.user._id});
   !conversations && res.status(500).json({conversations: null});
   for(let i = 0; i < conversations.length; i++) {
     const conversation = conversations[i];
@@ -19,9 +19,7 @@ exports.getConversationsSnippets = async (req, res) => {
     conversationsSnippets.push(conversationSnippet);
   }
   if (conversationsSnippets[0]) {
-    setTimeout(() => {
-      res.status(200).json({conversations: conversationsSnippets});
-    }, 1000)
+    res.status(200).json({conversations: conversationsSnippets});
   } else {
     res.status(200).json({conversations: conversations});
   }

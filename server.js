@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const compression = require('compression');
+const ss = require('socket.io-stream');
+const path = require('path');
 
 require('./config/config');
 const Message = require('./models/message');
@@ -14,11 +16,12 @@ const Conversation = require('./models/conversation');
 const generateMessage = require('./utils/generateMessage');
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
+const uploadToS3 = require('./utils/uploadToS3');
 
 app.use(compression());
 app.use(helmet());
-app.use(morgan('tiny'));
-const whitelist = ['https://chatter.cf', 'http://localhost:8080'];
+// app.use(morgan('tiny'));
+const whitelist = ['https://chatter.cf', 'http://localhost:8080', 'http://localhost:8081'];
 const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
   if (whitelist.indexOf(req.header('Origin')) !== -1) {
@@ -41,10 +44,34 @@ app.use('/user', userRoutes);
 app.use('/chat', chatRoutes);
 
 io.on('connection', socket => {
-  console.log('new user connected');
-  // On conversation entry, join broadcast channel
+  console.log('connected!')
+  ss(socket).on('file', function(stream, data, callback) {
+    console.log('data', data)
+    var filename = path.basename(data.name);
+    stream.pipe(fs.createWriteStream(filename));
+  });
+
+  socket.on('videoChatCall', (conversationId) => {
+    // console.log('videoChatCall', conversationId)
+    socket.broadcast.to(conversationId).emit('videoChatCall');
+  });
+  socket.on('videoChatAnswer', (conversationId) => {
+    console.log('videoChatAnswer', conversationId)
+    socket.broadcast.to(conversationId).emit('videoChatAnswer');
+  });
+  socket.on('videoChatSessionDescription', ({sessionDescription, conversationId}) => {
+    socket.broadcast.to(conversationId).emit('videoChatSessionDescription', sessionDescription);
+  });
+  socket.on('videoChatCandidate', ({payload, conversationId}) => {
+    // console.log('videoChatCandidate', payload)
+    socket.broadcast.to(conversationId).emit('videoChatCandidate', payload);
+  });
+  socket.on('videoChatHangup', (conversationId) => {
+    console.log('videoChatHangup', conversationId)
+    socket.broadcast.to(conversationId).emit('videoChatHangup');
+  });
+
   socket.on('enterConversation', (data) => {
-    console.log('enter!!!')
     socket.join(data.data.conversationId);
     io.of('/').in(data.data.conversationId).clients((error, clients) => {
       if (error) throw error;
