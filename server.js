@@ -56,14 +56,15 @@ io.on('connection', socket => {
     socket.broadcast.to(conversationId).emit('videoChatCall');
   });
   socket.on('videoChatAnswer', (conversationId) => {
-    console.log('videoChatAnswer', conversationId)
     socket.broadcast.to(conversationId).emit('videoChatAnswer');
+  });
+  socket.on('videoChatDecline', (conversationId) => {
+    socket.broadcast.to(conversationId).emit('videoChatDecline');
   });
   socket.on('videoChatSessionDescription', ({sessionDescription, conversationId}) => {
     socket.broadcast.to(conversationId).emit('videoChatSessionDescription', sessionDescription);
   });
   socket.on('videoChatCandidate', ({payload, conversationId}) => {
-    // console.log('videoChatCandidate', payload)
     socket.broadcast.to(conversationId).emit('videoChatCandidate', payload);
   });
   socket.on('videoChatHangup', (conversationId) => {
