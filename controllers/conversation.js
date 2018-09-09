@@ -30,7 +30,7 @@ exports.getMessages = (req, res) => {
   Message.find({ conversationId: req.query.conversation })
     .sort({createdAt: -1})
     .skip(skipMessagesNumber)
-    .limit(10)
+    .limit(20)
     .populate('author')
     .then(messages => {
       res.status(200).json({ messages });
