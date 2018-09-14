@@ -61,8 +61,8 @@ io.on('connection', socket => {
   socket.on('videoChatDecline', (conversationId) => {
     socket.broadcast.to(conversationId).emit('videoChatDecline');
   });
-  socket.on('videoChatAllow', (conversationId) => {
-    socket.broadcast.to(conversationId).emit('videoChatAllow');
+  socket.on('localStreamReady', (conversationId) => {
+    socket.broadcast.to(conversationId).emit('localStreamReady');
   });
   socket.on('videoChatSessionDescription', ({sessionDescription, conversationId}) => {
     socket.broadcast.to(conversationId).emit('videoChatSessionDescription', sessionDescription);
