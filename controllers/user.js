@@ -4,6 +4,35 @@ const uuidv4 = require('uuid/v4');
 const User = require('../models/user');
 const Conversation = require('../models/conversation');
 
+const createNewConversation = (me, user) => {
+  return new Promise((resolve, reject) => {
+    const conversationId = uuidv4();
+    const conversation = new Conversation({
+      participants: [user._id, me._id]
+    });
+    conversation.save().then(() => {
+      User.findByIdAndUpdate(user._id, {$push: {friends: me._id, conversations: conversation._id}}, {new: true}).then(user => {
+        console.log('friend', user);
+      }).catch(err => {
+        reject(err);
+      });
+      User.findByIdAndUpdate(me._id, {$push: {friends: user._id, conversations: conversation._id}}, {new: true}).populate('friends', '_id username email conversations').populate('conversations users messages').then(user => {
+        console.log('me', user);
+        return resolve(user);
+      }).catch(err => {
+        reject(err);
+      });
+    }).catch(err => {
+      reject(err);
+    })
+  })
+}
+
+exports.logout = (req, res) => {
+  req.user = null;
+  res.send('ok')
+}
+
 exports.signup = (req,res) => {
     const { username, email, password } = req.body;
     const saltRounds = 10;
@@ -49,12 +78,15 @@ exports.signup = (req,res) => {
             html
           };
           sgMail.send(msg);
-          res.send({
-            user
-          });
+          const me = { _id: user.id, username, email };
+          console.log('me', me);
+          const bot = { _id: '5cebee370ce06d0004cfa086', username: 'Chatter Bot', email: 'bot@bot.com' };
+          console.log('bot', bot);
+          createNewConversation(me, bot)
+            .then(user => res.send({user}))
+            .catch(err => res.status(500).send(err));
         }).catch(err => {
-          console.log(err)
-          res.status(500).send(err)
+          return res.status(401).send(err);
         });
     });
 }
@@ -77,6 +109,7 @@ exports.verification = (req,res) => {
 
 exports.login = (req,res) => {
   const { username, password } = req.body;
+  console.log(' username', username)
   User.findByCredentials(username, password).then(user => {
     console.log(user)
     user.generateTokens().then(({accessToken, refreshToken, refreshTokenExpiration}) => {
@@ -92,7 +125,7 @@ exports.login = (req,res) => {
       });
     });
   }).catch(err => {
-    res.status(500).send(err);
+    return res.status(401).send(err);
   });
 }
 
@@ -123,23 +156,7 @@ exports.addFriend = (req,res) => {
   const { user } = req.body;
   const { _id, username, email } = req.user;
   const me = { _id, username, email };
-  const conversationId = uuidv4();
-  const conversation = new Conversation({
-    participants: [user._id, me._id]
-  });
-  conversation.save().then(() => {
-    User.findByIdAndUpdate(user._id, {$push: {friends: me._id, conversations: conversation._id}}, {new: true}).then(user => {
-      console.log('friend', user);
-    }).catch(err => {
-      res.status(500).send(err);
-    });
-    User.findByIdAndUpdate(me._id, {$push: {friends: user._id, conversations: conversation._id}}, {new: true}).populate('friends', '_id username email conversations').populate('conversations users messages').then(user => {
-      console.log('me', user);
-      res.send({user});
-    }).catch(err => {
-      res.status(500).send(err);
-    });
-  }).catch(err => {
-    console.log(err);
-  })
+  createNewConversation(me, user)
+    .then(user => res.send({user}))
+    .catch(err => res.status(500).send(err));
 }

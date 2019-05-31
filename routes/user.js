@@ -2,6 +2,8 @@ const router = require('express').Router();
 const authenticate = require('../middleware/authenticate');
 const UserController = require('../controllers/user');
 
+router.post('/logout', UserController.logout);
+
 router.post('/signup', UserController.signup);
 
 router.get('/verification/:token', UserController.verification);
