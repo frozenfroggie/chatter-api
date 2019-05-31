@@ -4,7 +4,10 @@ const ConversationController = require('../controllers/conversation');
 
 router.get('/', authenticate, ConversationController.getConversationsSnippets);
 
+
 router.get('/messages', authenticate, ConversationController.getMessages);
+
+router.get('/conversationId/:friendId', authenticate, ConversationController.getConversationId)
 
 router.post('/:conversationId', authenticate, ConversationController.newMessage);
 

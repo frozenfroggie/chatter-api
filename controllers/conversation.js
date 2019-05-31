@@ -3,6 +3,18 @@ const Conversation = require('../models/conversation');
 const Message = require('../models/message');
 const createConversationSnippet = require('../utils/createConversationSnippet');
 
+
+exports.getConversationId = async (req, res) => {
+  const friendId = req.params.friendId;
+  console.log("ID:", friendId)
+  const conversation = await Conversation.findOne({participants: {"$all": [req.user._id, friendId]}});
+  console.log('CONVER FRIEND', conversation._id);
+  if(!conversation._id) {
+    return res.status(500);
+  }
+  res.send({conversationId: conversation._id})
+}
+
 exports.getConversationsSnippets = async (req, res) => {
   const conversationsSnippets = [];
   console.log('USER', req.user)
