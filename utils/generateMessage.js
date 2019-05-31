@@ -1,11 +1,12 @@
-const moment = require('moment');
-
-const generateMessage = (from, text) => {
-  return {
-    from,
-    text,
-    createdAt: moment().valueOf()
-  };
-};
-
-module.exports = generateMessage;
+// const moment = require('moment');
+//
+// const generateMessage = ({author, conversationId, messageText}) => {
+//   return {
+//     author,
+//     recipent
+//     conversationId,
+//     messageText,
+//   };
+// };
+//
+// module.exports = generateMessage;
