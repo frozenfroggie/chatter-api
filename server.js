@@ -10,6 +10,7 @@ const compression = require('compression');
 const ss = require('socket.io-stream');
 const path = require('path');
 const AssistantV2 = require('ibm-watson/assistant/v2');
+require('./config/config');
 
 const assistant = new AssistantV2({
   iam_apikey: process.env.IAM_APIKEY,
@@ -18,7 +19,6 @@ const assistant = new AssistantV2({
 });
 let sessionId;
 
-require('./config/config');
 const Message = require('./models/message');
 const Conversation = require('./models/conversation');
 const generateMessage = require('./utils/generateMessage');
