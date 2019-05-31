@@ -12,7 +12,7 @@ const path = require('path');
 const AssistantV2 = require('ibm-watson/assistant/v2');
 
 const assistant = new AssistantV2({
-  iam_apikey: '5PGInpqA-wArXSpV-qdXWNOFydgQVURe4QRwc_l5rrfN',
+  iam_apikey: process.env.IAM_APIKEY,
   url: 'https://gateway-fra.watsonplatform.net/assistant/api/',
   version: '2019-02-28'
 });
