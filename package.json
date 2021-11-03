@@ -38,7 +38,7 @@
     "socket.io": "^2.1.1",
     "socket.io-stream": "^0.9.1",
     "uuid": "^3.3.2",
-    "validator": "^10.4.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
