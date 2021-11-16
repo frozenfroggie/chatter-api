@@ -22,7 +22,7 @@
   "homepage": "https://github.com/frozenfroggie/chatter-api#readme",
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
-    "aws-sdk": "^2.307.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^2.0.1",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
